@@ -1,0 +1,8 @@
+# 数据集由脚本下载，避免将大体积原始数据提交到仓库。
+data/
+# 本地解释器缓存与虚拟环境。
+__pycache__/
+*.pyc
+.venv/
+# README 中的复现实验输出；正式提交的 mnist_15epochs 结果保留。
+runs/mnist_repeat/

@@ -1,0 +1,28 @@
+Lab01 MNIST分类实验运行说明
+
+环境：Python 3.12，依赖版本见requirements.txt。
+请先进入本文件所在的Sunyekuan/Lab01目录，再执行：
+
+python -m pip install -r requirements.txt
+python mnist_three_linear.py --epochs 15 --batch-size 256 --data-dir data --output-dir runs/mnist_repeat
+
+首次运行会自动下载MNIST。可用时采用CUDA，否则使用CPU。
+输出目录必须为空。重复实验请指定新的输出目录。
+
+网络结构：784 -> 256 -> 128 -> 10，两个隐藏层使用ReLU。
+数据划分：55000张训练图像、5000张验证图像、10000张测试图像。
+训练15轮，每5轮学习率减半。随机种子为42。
+根据验证集选择第14轮权重，最终测试准确率为97.76%（9776/10000）。
+
+runs/mnist_15epochs/history.csv：逐轮训练和验证记录。
+runs/mnist_15epochs/summary.json：实验配置及最终结果。
+runs/mnist_15epochs/epoch_01.pt至epoch_15.pt：各轮权重。
+runs/mnist_15epochs/best_weights.pt：验证集选出的最佳权重。
+runs/mnist_15epochs/split_indices.pt：训练集和验证集划分索引。
+
+加载最佳权重：
+import torch
+from mnist_three_linear import ThreeLinearNet
+model = ThreeLinearNet().to(dtype=torch.float32)
+model.load_state_dict(torch.load("runs/mnist_15epochs/best_weights.pt", map_location="cpu", weights_only=True))
+model.eval()
